@@ -11,8 +11,8 @@ export type ChartRow = {
 
 }
 export type ChartCell = {
-    values: ChartValue[]
-    label?: string;
+    values: ChartValue[];
+    label?: string;    
 }
 export type ChartValue = {
     value: number;
