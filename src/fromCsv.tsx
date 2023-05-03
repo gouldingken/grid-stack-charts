@@ -1,7 +1,7 @@
 import { ChartCell, ChartData, ChartRow } from "./components/GridStackChart";
 import { DataSet } from './App';
 
-export function fromCsv(dataSets: DataSet[]): ChartData {
+export function fromCsv(dataSets: DataSet[], useGlobalMax = true): ChartData {
     const rows: ChartRow[] = [];
     const mainData = dataSets[0].csvData; //ASSUME the same basic layout
     const columnTitles = [...mainData.headers.slice(1), ...dataSets.filter(d => d.includeRowTotal).map(d => d.title)];
@@ -28,6 +28,8 @@ export function fromCsv(dataSets: DataSet[]): ChartData {
         rowSumsArr[r] = rowSums;
     }
     const maxValues: { [key: string]: number; } = {};
+
+    let maxMax = 0
     for (let rs of rowSumsArr) {
         for (let k in rs) {
             if (!maxValues[k]) {
@@ -35,11 +37,13 @@ export function fromCsv(dataSets: DataSet[]): ChartData {
             } else {
                 maxValues[k] = Math.max(rs[k], maxValues[k]);
             }
+            maxMax = Math.max(maxMax, maxValues[k])
         }
     }
 
     for (let r = 0; r < mainData.data.length; r++) {
         const rowData = mainData.data[r];
+        if (rowData.length < 5) continue;//clean up CSV issue
         const row: ChartRow = { cells: [], title: rowData[0] };
         rows.push(row);
         const rowSums: { [key: string]: number; } = {};
@@ -68,9 +72,11 @@ export function fromCsv(dataSets: DataSet[]): ChartData {
         }
         for (let d of dataSets.filter(d => d.includeRowTotal)) {
             const totalCell: ChartCell = { values: [], label: `${Math.round(rowSums[d.id] * 100) / 100}` };
+            let maxValue = maxValues[d.id];
+            if (useGlobalMax) maxValue = maxMax;
             totalCell.values.push({
                 color: d.color,
-                value: rowSums[d.id] / maxValues[d.id],
+                value: rowSums[d.id] / maxValue,
             });
             row.cells.push(totalCell);
         }

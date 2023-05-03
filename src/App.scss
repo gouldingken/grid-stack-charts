@@ -1,4 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600;800&display=swap');
+
 .GridStackChart {
   //NOTE - can't use styles here for SVG elements because they don't carry through in the download
-
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8em;
 }
