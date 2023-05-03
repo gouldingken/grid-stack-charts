@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.scss'
 import { ChartCell, ChartData, ChartRow, GridStackChart } from "./components/GridStackChart";
@@ -11,29 +11,53 @@ const colors = [
     '#53e6f3',
 ];
 
-function fromCsv(csvDataFiles:CsvData[], colors:string[]): ChartData {
+type DataSet = {
+    id: string,
+    title: string,
+    csvData: CsvData;
+    color: string;
+    includeRowTotal: boolean
+}
+
+function fromCsv(dataSets:DataSet[]): ChartData {
     const rows: ChartRow[] = [];
-    const mainData = csvDataFiles[0];//ASSUME the same basic layout
-    const columnTitles = mainData.headers.slice(1);//skip the row title cell
-    const rowSums: {[key:string]:number} = {};
+    const mainData = dataSets[0].csvData;//ASSUME the same basic layout
+    const columnTitles = [...mainData.headers.slice(1), ...dataSets.filter(d=>d.includeRowTotal).map(d => d.title)]
+
     for (let r = 0; r < mainData.data.length; r++) {
         const rowData = mainData.data[r];
         const row: ChartRow = { cells: [], title: rowData[0] };
         rows.push(row);
+        const rowSums: {[key:string]:number} = {};
         for (let i = 1; i < rowData.length; i++) {
             const cell: ChartCell = { values: [] };
             row.cells.push(cell);
             let sum = 0;
-            for (let j = 0; j < csvDataFiles.length; j++) {
-                const layerData = csvDataFiles[j];//ASSUME the same basic layout
+            for (let j = 0; j < dataSets.length; j++) {
+                const dataSet = dataSets[j];
+                const layerData = dataSet.csvData;
                 const layerRowData = layerData.data[r];
                 let value = parseFloat(layerRowData[i]);
-                cell.values.push({ value: value, color: colors[j] });
+                if (isNaN(value)) value = 0;
+                cell.values.push({ value: value, color: dataSet.color });
                 sum += value;
+                if (dataSet.includeRowTotal) {
+                    if (!rowSums[dataSet.id]) rowSums[dataSet.id] = 0;
+                    rowSums[dataSet.id] += value;
+                }
             }
             if (sum < 1) {
                 cell.values.push({ value: 1-sum, color: '#eed37e' });
             }
+        }
+        for (let d of dataSets.filter(d=>d.includeRowTotal)) {
+            const totalCell: ChartCell = { values: [] };
+            totalCell.values.push({
+                color: d.color,
+                value: rowSums[d.id] / rowData.length,
+                label: `${rowSums[d.id]}`
+            });
+            row.cells.push(totalCell);
         }
 
     }
@@ -74,24 +98,23 @@ async function grabData() {
     // const csvData3 = await fetchAndParseCSV(file3);
 
     return fromCsv([
-        csvDataDark,
-        csvData1,
-        csvData2,
-    ], [
-        '#4a535b',
-        '#56a3d3',
-        '#9060ff']);
+        {id: 'dark', title: '', color:'#4a535b',csvData: csvDataDark, includeRowTotal: false},
+        {id: 'existing', title: 'Existing', color:'#56a3d3',csvData: csvData1, includeRowTotal: true},
+        {id: 'new', title: 'New', color:'#9060ff',csvData: csvData2, includeRowTotal: true},         
+    ]);
 }
 
 function App() {
     const [data, setData] = useState<ChartData>(mockData())
 
-    grabData().then(chartData => setData(chartData))
+    useEffect(()=> {
+        grabData().then(chartData => setData(chartData))
+    }, [])    
 
     return (
         <div className="App">
             <SvgDownloadable fileName={'gridChart.svg'}>
-                <GridStackChart data={data} rowHeight={24} cellWidth={80} cellMax={1}/>
+                <GridStackChart data={data} rowHeight={24} cellWidth={60} cellMax={1}/>
             </SvgDownloadable>
         </div>
     )

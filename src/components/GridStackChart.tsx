@@ -15,8 +15,9 @@ export type ChartCell = {
 
 }
 export type ChartValue = {
-    value: number
-    color: string
+    value: number;
+    color: string;
+    label?: string;
 }
 
 type GridStackRowProps = {
@@ -50,6 +51,9 @@ export const GridStackChart = observer(({ data, rowHeight, cellWidth, cellMax }:
 
     const paddingLeft = 120;
     const paddingTop = 30;
+
+
+    console.log(maxCells)
 
 
     return <svg width={width + paddingLeft} height={height + paddingTop} className={'GridStackChart'}>
