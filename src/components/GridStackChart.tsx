@@ -12,12 +12,11 @@ export type ChartRow = {
 }
 export type ChartCell = {
     values: ChartValue[]
-
+    label?: string;
 }
 export type ChartValue = {
     value: number;
     color: string;
-    label?: string;
 }
 
 type GridStackRowProps = {

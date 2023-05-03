@@ -51,11 +51,10 @@ function fromCsv(dataSets:DataSet[]): ChartData {
             }
         }
         for (let d of dataSets.filter(d=>d.includeRowTotal)) {
-            const totalCell: ChartCell = { values: [] };
+            const totalCell: ChartCell = { values: [], label: `${Math.round(rowSums[d.id]*100)/100 }` };
             totalCell.values.push({
                 color: d.color,
-                value: rowSums[d.id] / rowData.length,
-                label: `${rowSums[d.id]}`
+                value: rowSums[d.id] / rowData.length,                
             });
             row.cells.push(totalCell);
         }

@@ -50,5 +50,6 @@ export const GridStackCell = observer(({ cell, cellMax, xPos, cellWidth, rowHeig
                 fill={v.color}/>
         })}
 
+        {cell.label && <text x={4} y={rowHeight/2}  alignmentBaseline="middle">{cell.label}</text>}
     </g>
 });
