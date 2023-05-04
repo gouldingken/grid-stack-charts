@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { ChartCell } from "./GridStackChart";
-import { fontFace, fontSize } from "../functions";
+import { fontFace, fontSize, fontWeight } from "../functions";
 
 const styles = {
     cell: {
@@ -51,6 +51,6 @@ export const GridStackCell = observer(({ cell, cellMax, xPos, cellWidth, rowHeig
                 fill={v.color}/>
         })}
 
-        {cell.label && <text x={4} y={rowHeight/2} fontFamily={fontFace} fontSize = {fontSize} alignmentBaseline="middle">{cell.label}</text>}
+        {cell.label && <text x={4} y={rowHeight/2} fontFamily={fontFace} fontWeight = {fontWeight} fontSize = {fontSize} alignmentBaseline="middle">{cell.label}</text>}
     </g>
 });
