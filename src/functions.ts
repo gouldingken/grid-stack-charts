@@ -35,3 +35,7 @@ export async function fetchAndParseCSV(url: string): Promise<CsvData> {
     return {headers, data}
 
 }
+
+export const fontFace = "'Korolev', sans-serif";
+
+export const fontSize = "0.8em";

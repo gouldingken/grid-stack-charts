@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { GridStackCell } from "./GridStackCell";
+import { fontFace, fontSize } from "../functions";
 
 export type ChartData = {
     columnTitles: string[],
@@ -58,13 +59,13 @@ export const GridStackChart = observer(({ data, rowHeight, cellWidth, cellMax }:
     return <svg width={width + paddingLeft} height={height + paddingTop} className={'GridStackChart'}>
         <g transform={`translate(0,${paddingTop})`}>
             {data.rows.map(((r, i) =>
-                <text y={(i + 0.5) * rowHeight} alignmentBaseline="middle"
+                <text y={(i + 0.5) * rowHeight} fontFamily={fontFace} fontSize = {fontSize}  alignmentBaseline="middle"
                       key={i}>{r.title}</text>))
             }
         </g>
         <g transform={`translate(${paddingLeft},${paddingTop - 10})`}>
             {data.columnTitles.map(((title, i) =>
-                <text x={(i + 0.5) * cellWidth} alignmentBaseline="baseline" textAnchor="middle"
+                <text x={(i + 0.5) * cellWidth} fontFamily={fontFace} fontSize = {fontSize} alignmentBaseline="baseline" textAnchor="middle"
                       key={i}>{title}</text>))
             }
         </g>

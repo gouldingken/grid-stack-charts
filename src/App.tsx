@@ -43,20 +43,26 @@ function mockData(): ChartData {
 //TODO move this to a JSON spec file so Katya and Scott can run this
 //or better yet, find a cloud based IDE
 async function grabData() {
-    let dark = './data/dark.csv';
-    let file1 = './data/upper-canopy_all-towers-without-trees_avgBaselineShadowMatrix.csv';
-    let file2 = './data/upper-canopy_all-towers-without-trees_avgNewShadowMatrix.csv';
-    let file3 = './data/upper-canopy_all-towers-without-trees_avgShadowMatrix.csv';
+    let sun = 'public/data/planting-bed-4_baseline-with-trees_avgSunlightMatrix.csv';
+    //let shadow = './data/planting-bed_baseline-with-trees_avgShadowMatrix.csv';
+    let baselineShadow = 'public/data/planting-bed-4_baseline-with-trees_avgBaselineShadowMatrix.csv';
+    let newShadowAll = 'public/data/planting-bed-4_baseline-with-trees_avgNewShadowMatrix.csv';
+    //let newShadowBldg = './data/';
 
-    const csvDataDark = await fetchAndParseCSV(dark);
-    const csvData1 = await fetchAndParseCSV(file1);
-    const csvData2 = await fetchAndParseCSV(file2);
-    // const csvData3 = await fetchAndParseCSV(file3);
+    const csvDataSun = await fetchAndParseCSV(sun);
+    // const csvDataShadow = await fetchAndParseCSV(shadow);
+    const csvDataBaselineShadow = await fetchAndParseCSV(baselineShadow);
+    const csvDataNewShadowAll = await fetchAndParseCSV(newShadowAll);
+    // const csvDataNewShadowBldg = await fetchAndParseCSV(newShadowBldg);
+    const csvDataNewShadowTree = await fetchAndParseCSV('public/data/planting-bed-4_baseline-with-trees_avgNewShadowMatrix.csv');
 
     return fromCsv([
-        {id: 'dark', title: '', color:'#4a535b',csvData: csvDataDark, includeRowTotal: false},
-        {id: 'existing', title: 'Existing', color:'#56a3d3',csvData: csvData1, includeRowTotal: true},
-        {id: 'new', title: 'New', color:'#9060ff',csvData: csvData2, includeRowTotal: true},         
+        {id: 'sun', title: 'Sun', color:'#ffffff',csvData: csvDataSun, includeRowTotal: false},
+        //{id: 'shadow', title: 'Shadow', color:'#3687C0',csvData: csvDataShadow, includeRowTotal: true},
+        {id: 'existing', title: 'Existing', color:'#3687C0',csvData: csvDataBaselineShadow, includeRowTotal: true},
+        //{id: 'new', title: 'New', color:'#37a364',csvData: csvDataNewShadowAll, includeRowTotal: true},      
+        //{id: 'newBldg', title: 'Towers', color:'#8A5DAA',csvData: csvDataNewShadowBldg, includeRowTotal: true},     
+        {id: 'newTree', title: 'Trees', color:'#37a364',csvData: csvDataNewShadowTree, includeRowTotal: true},         
     ]);
 }
 
