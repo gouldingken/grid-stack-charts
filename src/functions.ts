@@ -39,3 +39,9 @@ export async function fetchAndParseCSV(url: string): Promise<CsvData> {
 export const fontFace = "'Korolev', sans-serif";
 export const fontWeight = "bold";
 export const fontSize = "0.8em";
+
+export const sunColor = '#fda444';
+export const shadowBlue = '#4e9bcb';
+export const shadowPurple = '#8b78b7';
+export const shadowGreen = '#66c2a4';
+export const nightColor = '#737373';

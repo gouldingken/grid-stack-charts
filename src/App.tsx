@@ -5,6 +5,7 @@ import { ChartCell, ChartData, ChartRow, GridStackChart } from "./components/Gri
 import { CsvData, downloadSVG, fetchAndParseCSV } from "./functions";
 import { SvgDownloadable } from "./components/SvgDownloadable";
 import { fromCsv } from './fromCsv';
+import { sunColor, shadowBlue, shadowPurple, shadowGreen, nightColor } from "./functions";
 
 const colors = [
     '#0d56a9',
@@ -43,27 +44,81 @@ function mockData(): ChartData {
 //TODO move this to a JSON spec file so Katya and Scott can run this
 //or better yet, find a cloud based IDE
 async function grabData() {
-    let sun = 'public/data/planting-bed-4_baseline-with-trees_avgSunlightMatrix.csv';
-    //let shadow = './data/planting-bed_baseline-with-trees_avgShadowMatrix.csv';
-    let baselineShadow = 'public/data/planting-bed-4_baseline-with-trees_avgBaselineShadowMatrix.csv';
-    let newShadowAll = 'public/data/planting-bed-4_baseline-with-trees_avgNewShadowMatrix.csv';
-    //let newShadowBldg = './data/';
+    // BASELINE COMBOS
+    // orange sun + white shadow (all)
+    // white sun + blue shadow (all)
+    // white sun + blue bldg shadow + green new tree shade
 
-    const csvDataSun = await fetchAndParseCSV(sun);
-    // const csvDataShadow = await fetchAndParseCSV(shadow);
-    const csvDataBaselineShadow = await fetchAndParseCSV(baselineShadow);
-    const csvDataNewShadowAll = await fetchAndParseCSV(newShadowAll);
-    // const csvDataNewShadowBldg = await fetchAndParseCSV(newShadowBldg);
-    const csvDataNewShadowTree = await fetchAndParseCSV('public/data/planting-bed-4_baseline-with-trees_avgNewShadowMatrix.csv');
+    // PROPOSED COMBOS
+    // 
+    
+    // baseline
+    const dataCanopyBaselineSun = await fetchAndParseCSV('public/data/upper-canopy_baseline-without-trees_avgSunlightMatrix.csv');
+    const dataCanopyBaselineShadow = await fetchAndParseCSV('public/data/upper-canopy_baseline-without-trees_avgShadowMatrix.csv');
+    
+    // N.B. repeat for planting beds 1-6
+    const dataPlantingBedBaselineSun = await fetchAndParseCSV('public/data/planting-bed-4_baseline-with-trees_avgSunlightMatrix.csv');
+    const dataPlantingBedBaselineAllShadow = await fetchAndParseCSV('public/data/planting-bed-4_baseline-with-trees_avgShadowMatrix.csv');
+    const dataPlantingBedBaselineBldgShadow = await fetchAndParseCSV('public/data/planting-bed-4_baseline-with-trees_avgBaselineShadowMatrix.csv');
+    const dataPlantingBedBaselineTreeShade= await fetchAndParseCSV('public/data/planting-bed-4_baseline-with-trees_avgNewShadowMatrix.csv');
+    const dataPlantingBedBaselineBldgShadowInverse = await fetchAndParseCSV('public/data/planting-bed-4_baseline-with-trees_avgBaselineShadowMatrixInverse.csv');
+    const dataPlantingBedBaselineTreeShadeInverse= await fetchAndParseCSV('public/data/planting-bed-4_baseline-with-trees_avgNewShadowMatrixInverse.csv');
 
+    // N.B. repeat for sites 1-10
+    const dataCanopyImpactShadow = await fetchAndParseCSV('public/data/planting-bed-4_baseline-with-trees_avgSunlightMatrix.csv');
+    const dataCanopyImpactBldgShadow = await fetchAndParseCSV('public/data/planting-bed-4_baseline-with-trees_avgSunlightMatrix.csv');
+    const dataCanopyImpactTreeShade = await fetchAndParseCSV('public/data/planting-bed-4_baseline-with-trees_avgSunlightMatrix.csv');
+    const dataCanopyImpactSun = await fetchAndParseCSV('public/data/planting-bed-4_baseline-with-trees_avgSunlightMatrix.csv');
+
+    // N.B. sun is always present (to fill out dataset) - sometimes white, sometimes orange
+
+    // // upper canopy - baseline conditions - sunlight
+    // return fromCsv([
+    //     {id: 'sun', title: 'Sun', color:sunColor, csvData: dataCanopyBaselineSun, includeRowTotal: true},
+    //     {id: 'shadow', title: 'Shadow', color:'#ffffff', csvData: dataCanopyBaselineShadow, includeRowTotal: false},
+    // ]);
+
+    // // upper canopy - baseline conditions - shadow
+    // return fromCsv([
+    //     {id: 'sun', title: 'Sun', color:'#ffffff',csvData: dataCanopyBaselineSun, includeRowTotal: false},
+    //     {id: 'shadow', title: 'Shadow', color:shadowBlue, csvData: dataCanopyBaselineShadow, includeRowTotal: true},       
+    // ]);
+    
+
+
+    // // planting bed - baseline conditions - sunlight
+    // return fromCsv([
+    //     {id: 'sun', title: 'Sun', color:sunColor,csvData: dataPlantingBedBaselineSun, includeRowTotal: true},
+    //     {id: 'shadow', title: 'Shadow', color:'#ffffff', csvData: dataPlantingBedBaselineAllShadow, includeRowTotal: false},
+    // ]);
+    
+    // // planting bed - baseline conditions - all shade + shadow (blue)
+    // return fromCsv([
+    //     {id: 'sun', title: 'Sun', color:'#ffffff',csvData: dataPlantingBedBaselineSun, includeRowTotal: false},
+    //     {id: 'shadow', title: 'Shadow', color:shadowBlue, csvData: dataPlantingBedBaselineAllShadow, includeRowTotal: true},
+    // ]);
+    // planting bed - baseline conditions - all shade + shadow (purple + green)
     return fromCsv([
-        {id: 'sun', title: 'Sun', color:'#ffffff',csvData: csvDataSun, includeRowTotal: false},
-        //{id: 'shadow', title: 'Shadow', color:'#3687C0',csvData: csvDataShadow, includeRowTotal: true},
-        {id: 'existing', title: 'Existing', color:'#3687C0',csvData: csvDataBaselineShadow, includeRowTotal: true},
-        //{id: 'new', title: 'New', color:'#37a364',csvData: csvDataNewShadowAll, includeRowTotal: true},      
-        //{id: 'newBldg', title: 'Towers', color:'#8A5DAA',csvData: csvDataNewShadowBldg, includeRowTotal: true},     
-        {id: 'newTree', title: 'Trees', color:'#37a364',csvData: csvDataNewShadowTree, includeRowTotal: true},         
+        {id: 'sun', title: 'Sun', color:'#ffffff',csvData: dataPlantingBedBaselineSun, includeRowTotal: false},
+        {id: 'bldgShadow', title: 'Buildings', color:shadowPurple, csvData: dataPlantingBedBaselineBldgShadow, includeRowTotal: true},
+        {id: 'treeShade', title: 'Trees', color:shadowGreen, csvData: dataPlantingBedBaselineTreeShade, includeRowTotal: true},
     ]);
+
+    // // planting bed - baseline conditions - building shadow only - CONSIDER USING SPECIFIC SUNLIGHT DATASET (visually better)
+    // return fromCsv([
+    //     {id: 'bldgShadow', title: 'Buildings', color:shadowPurple, csvData: dataPlantingBedBaselineBldgShadow, includeRowTotal: true},  
+    //     {id: 'nonBldgShadow', title: '', color:'#ffffff', csvData: dataPlantingBedBaselineBldgShadowInverse, includeRowTotal: false},      
+    // ]);
+
+    // planting bed - baseline conditions - tree shade only - CONSIDER USING SPECIFIC SUNLIGHT DATASET
+    return fromCsv([
+        {id: 'treeShade', title: 'Trees', color:shadowGreen, csvData: dataPlantingBedBaselineTreeShade, includeRowTotal: true},  
+        {id: 'nonTreeShade', title: '', color:'#ffffff', csvData: dataPlantingBedBaselineTreeShadeInverse, includeRowTotal: false},       
+    ]);
+
+
+
+
 }
 
 function App() {

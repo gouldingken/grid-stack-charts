@@ -49,7 +49,7 @@ export const GridStackChart = observer(({ data, rowHeight, cellWidth, cellMax }:
     const maxCells = Math.max(...data.rows.map((r) => r.cells.length));
     const width = maxCells * cellWidth;
 
-    const paddingLeft = 120;
+    const paddingLeft = 75;
     const paddingTop = 30;
 
 

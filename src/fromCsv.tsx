@@ -1,5 +1,6 @@
 import { ChartCell, ChartData, ChartRow } from "./components/GridStackChart";
 import { DataSet } from './App';
+import { nightColor } from "./functions";
 
 export function fromCsv(dataSets: DataSet[], useGlobalMax = true): ChartData {
     const rows: ChartRow[] = [];
@@ -79,7 +80,7 @@ export function fromCsv(dataSets: DataSet[], useGlobalMax = true): ChartData {
                 }
 
                 if(reverse) cell.values.reverse();
-                cell.values.push({ value: 1 - sum, color: '#3b3b3b' });
+                cell.values.push({ value: 1 - sum, color: nightColor });
                 if(reverse) cell.values.reverse();
             }
         }
