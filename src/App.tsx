@@ -65,12 +65,38 @@ async function grabData() {
     const dataPlantingBedBaselineTreeShadeInverse= await fetchAndParseCSV('public/data/planting-bed-4_baseline-with-trees_avgNewShadowMatrixInverse.csv');
 
     // N.B. repeat for sites 1-10
-    const dataCanopyImpactShadow = await fetchAndParseCSV('public/data/planting-bed-4_baseline-with-trees_avgSunlightMatrix.csv');
-    const dataCanopyImpactBldgShadow = await fetchAndParseCSV('public/data/planting-bed-4_baseline-with-trees_avgSunlightMatrix.csv');
-    const dataCanopyImpactTreeShade = await fetchAndParseCSV('public/data/planting-bed-4_baseline-with-trees_avgSunlightMatrix.csv');
-    const dataCanopyImpactSun = await fetchAndParseCSV('public/data/planting-bed-4_baseline-with-trees_avgSunlightMatrix.csv');
+    const dataCanopyImpactSun = await fetchAndParseCSV('public/data/upper-canopy_tower-0-without-trees_avgSunlightMatrix.csv');
+    const dataCanopyImpactAllShadow = await fetchAndParseCSV('public/data/upper-canopy_tower-0-without-trees_avgShadowMatrix.csv');
+    const dataCanopyImpactExistingShadow = await fetchAndParseCSV('public/data/upper-canopy_tower-0-without-trees_avgBaselineShadowMatrix.csv');
+    const dataCanopyImpactNewShadow = await fetchAndParseCSV('public/data/upper-canopy_tower-0-without-trees_avgNewShadowMatrix.csv');
+    const dataCanopyImpactNewInverse = await fetchAndParseCSV('public/data/upper-canopy_tower-0-without-trees_avgNewShadowMatrixInverse.csv');
 
     // N.B. sun is always present (to fill out dataset) - sometimes white, sometimes orange
+
+    // // upper canopy - potential impact - existing + new shadow (blue + purple)
+    // return fromCsv([
+    //     {id: 'sun', title: 'Sun', color:'#ffffff', csvData: dataCanopyImpactSun, includeRowTotal: false},
+    //     {id: 'existing', title: 'Existing', color:shadowBlue, csvData: dataCanopyImpactExistingShadow, includeRowTotal: true},  
+    //     {id: 'new', title: 'New', color:shadowPurple, csvData: dataCanopyImpactNewShadow, includeRowTotal: true},      
+    // ]);
+    // upper canopy - potential impact - existing + new shadow (blue)
+    return fromCsv([
+        {id: 'sun', title: 'Sun', color:'#ffffff', csvData: dataCanopyImpactSun, includeRowTotal: false},
+        {id: 'shadow', title: 'Shadow', color:shadowBlue, csvData: dataCanopyImpactAllShadow, includeRowTotal: true},  
+    ]);
+    
+    // upper canopy - potential impact - new shadow (purple)
+    return fromCsv([
+        {id: 'nonNewShadow', title: '', color:'#ffffff', csvData: dataCanopyImpactNewInverse, includeRowTotal: false},  
+        {id: 'newShadow', title: 'New', color:shadowPurple, csvData: dataCanopyImpactNewShadow, includeRowTotal: true},      
+    ]);
+    
+    // upper canopy - potential impact - remaining sun (orange)
+    return fromCsv([
+        {id: 'sun', title: 'Sun', color:sunColor, csvData: dataCanopyImpactSun, includeRowTotal: true},  
+        {id: 'shadow', title: 'Shadow', color:'#ffffff', csvData: dataCanopyImpactAllShadow, includeRowTotal: false},   
+    ]);
+
 
     // // upper canopy - baseline conditions - sunlight
     // return fromCsv([
@@ -83,7 +109,6 @@ async function grabData() {
     //     {id: 'sun', title: 'Sun', color:'#ffffff',csvData: dataCanopyBaselineSun, includeRowTotal: false},
     //     {id: 'shadow', title: 'Shadow', color:shadowBlue, csvData: dataCanopyBaselineShadow, includeRowTotal: true},       
     // ]);
-    
 
 
     // // planting bed - baseline conditions - sunlight
@@ -97,28 +122,24 @@ async function grabData() {
     //     {id: 'sun', title: 'Sun', color:'#ffffff',csvData: dataPlantingBedBaselineSun, includeRowTotal: false},
     //     {id: 'shadow', title: 'Shadow', color:shadowBlue, csvData: dataPlantingBedBaselineAllShadow, includeRowTotal: true},
     // ]);
-    // planting bed - baseline conditions - all shade + shadow (purple + green)
-    return fromCsv([
-        {id: 'sun', title: 'Sun', color:'#ffffff',csvData: dataPlantingBedBaselineSun, includeRowTotal: false},
-        {id: 'bldgShadow', title: 'Buildings', color:shadowPurple, csvData: dataPlantingBedBaselineBldgShadow, includeRowTotal: true},
-        {id: 'treeShade', title: 'Trees', color:shadowGreen, csvData: dataPlantingBedBaselineTreeShade, includeRowTotal: true},
-    ]);
-
-    // // planting bed - baseline conditions - building shadow only - CONSIDER USING SPECIFIC SUNLIGHT DATASET (visually better)
+    // // planting bed - baseline conditions - all shade + shadow (blue + green)
     // return fromCsv([
-    //     {id: 'bldgShadow', title: 'Buildings', color:shadowPurple, csvData: dataPlantingBedBaselineBldgShadow, includeRowTotal: true},  
-    //     {id: 'nonBldgShadow', title: '', color:'#ffffff', csvData: dataPlantingBedBaselineBldgShadowInverse, includeRowTotal: false},      
+    //     {id: 'sun', title: 'Sun', color:'#ffffff',csvData: dataPlantingBedBaselineSun, includeRowTotal: false},
+    //     {id: 'bldgShadow', title: 'Buildings', color:shadowBlue, csvData: dataPlantingBedBaselineBldgShadow, includeRowTotal: true},
+    //     {id: 'treeShade', title: 'Trees', color:shadowGreen, csvData: dataPlantingBedBaselineTreeShade, includeRowTotal: true},
     // ]);
 
-    // planting bed - baseline conditions - tree shade only - CONSIDER USING SPECIFIC SUNLIGHT DATASET
-    return fromCsv([
-        {id: 'treeShade', title: 'Trees', color:shadowGreen, csvData: dataPlantingBedBaselineTreeShade, includeRowTotal: true},  
-        {id: 'nonTreeShade', title: '', color:'#ffffff', csvData: dataPlantingBedBaselineTreeShadeInverse, includeRowTotal: false},       
-    ]);
+    // // planting bed - baseline conditions - building shadow only
+    // return fromCsv([
+    //     {id: 'nonBldgShadow', title: '', color:'#ffffff', csvData: dataPlantingBedBaselineBldgShadowInverse, includeRowTotal: false},
+    //     {id: 'bldgShadow', title: 'Buildings', color:shadowBlue, csvData: dataPlantingBedBaselineBldgShadow, includeRowTotal: true},        
+    // ]);
 
-
-
-
+    // // planting bed - baseline conditions - tree shade only
+    // return fromCsv([  
+    //     {id: 'nonTreeShade', title: '', color:'#ffffff', csvData: dataPlantingBedBaselineTreeShadeInverse, includeRowTotal: false},       
+    //     {id: 'treeShade', title: 'Trees', color:shadowGreen, csvData: dataPlantingBedBaselineTreeShade, includeRowTotal: true},
+    // ]);
 }
 
 function App() {
