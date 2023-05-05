@@ -67,22 +67,23 @@ export function fromCsv(dataSets: DataSet[], useGlobalMax = true): ChartData {
                     rowSums[dataSet.id] += value;
                 }
             }
-            if (sum < 1) {                
-                // retrieve hour (first row in this column) for this cell  
-                const cellString = mainData.headers[i]; 
-                let hourString = "0";
-                let reverse = false;
-                if(cellString && cellString.indexOf(':') > -1)
-                {
-                    hourString = cellString.split(':')[0];
-                    const hour = parseInt(hourString);
-                    reverse = hour <= 12;
-                }
+            if (sum < 1) {
 
-                if(reverse) cell.values.reverse();
+                //if(reverse) cell.values.reverse();
                 cell.values.push({ value: 1 - sum, color: nightColor });
-                if(reverse) cell.values.reverse();
             }
+                            
+            // reverse cells before 2pm
+            const cellString = mainData.headers[i]; 
+            let hourString = "0";
+            let reverse = false;
+            if(cellString && cellString.indexOf(':') > -1)
+            {
+                hourString = cellString.split(':')[0];
+                const hour = parseInt(hourString);
+                reverse = hour < 12;
+            }
+            if(reverse) cell.values.reverse();
         }
         for (let d of dataSets.filter(d => d.includeRowTotal)) {
             const totalCell: ChartCell = { values: [], label: `${Math.round(rowSums[d.id] * 100) / 100}` };
