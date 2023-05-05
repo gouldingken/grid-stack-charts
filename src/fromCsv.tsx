@@ -81,7 +81,7 @@ export function fromCsv(dataSets: DataSet[], useGlobalMax = true): ChartData {
             {
                 hourString = cellString.split(':')[0];
                 const hour = parseInt(hourString);
-                reverse = hour < 12;
+                reverse = hour < 15;
             }
             if(reverse) cell.values.reverse();
         }
